@@ -53,7 +53,7 @@ if os.path.exists(part_terminal_dict_path):
     with open(part_terminal_dict_path, 'r') as f:
         part_terminal_dict = json.load(f)
         terminal_dict.update(part_terminal_dict)
-        print '[Loaded] terminal dict from,', part_terminal_dict_path
+        print('[Loaded] terminal dict from,', part_terminal_dict_path)
 
 def find_slicing_point(formula):
     length = len(formula)
@@ -86,9 +86,9 @@ def is_terminal(formula):
     except ValueError:
         is_digit = False
     if is_digit or formula in terminal_dict:
-        print 'is terminal', formula
+        print('is terminal', formula)
         return True
-    print 'not terminal', formula
+    print('not terminal', formula)
     return False
 
 def compute_node(data, isterminal):
@@ -99,7 +99,7 @@ def compute_node(data, isterminal):
                 the_path = terminal_data
                 f = open(terminal_data, 'rb')
                 terminal_data = pickle.load(f)
-                print 'Loaded', the_path, 'from disk'
+                print('Loaded', the_path, 'from disk')
             return terminal_data
         else:
             return float(data)
@@ -113,19 +113,19 @@ def compute_node(data, isterminal):
         for substr in operands_list:
             results.append(compute_node(substr, is_terminal(substr)))
         if len(current_operator) == 0:
-            print 'Yet another pair of parenthese'
+            print('Yet another pair of parenthese')
             assert len(results) == 1, 'Result length not == 1'
             return results[0]
-        print 'Computing', current_operator
+        print('Computing', current_operator)
         return getattr(function, current_operator)(*results)
 
 def compute_formula(alpha_id, formula):
     output_path = os.path.join(root_path, 'data', 'alpha' + alpha_id + '.pkl')
     if os.path.exists(output_path):
-        print '[Skip]', alpha_id, 'already exists.\n'
+        print('[Skip]', alpha_id, 'already exists.\n')
     else:   
         try:
-            print '[Computing] alpha', alpha_id
+            print('[Computing] alpha', alpha_id)
             result = compute_node(formula, is_terminal(formula))
             alpha_id = str(alpha_id)
             result.to_pickle(output_path)
@@ -136,14 +136,14 @@ def compute_formula(alpha_id, formula):
                 global part_terminal_dict
                 terminal_dict[name] = output_path
                 part_terminal_dict[name] = output_path
-                print '[UPDATE]', name, 'add to terminal_dict'
+                print('[UPDATE]', name, 'add to terminal_dict')
                 with open(part_terminal_dict_path, 'w') as f:
                     json.dump(part_terminal_dict, f)
-                    print '[Saved] terminal dict to', part_terminal_dict_path
-            print '[Done] alpha' + alpha_id, 'computed, output to', output_path, '\n'
-        except Exception, e:
-            print e
-            print '[Exception]', alpha_id, 'fail to compute.\n'
+                    print('[Saved] terminal dict to', part_terminal_dict_path)
+            print('[Done] alpha' + alpha_id, 'computed, output to', output_path, '\n')
+        except:
+            print(e)
+            print('[Exception]', alpha_id, 'fail to compute.\n')
 
 def load_signal(file_path):
     with open(file_path, 'r') as f:
